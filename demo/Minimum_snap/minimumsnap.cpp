@@ -33,7 +33,6 @@ MinimumSnap::~MinimumSnap()
 DVec<double> MinimumSnap::AllocateTime(const DMat<double> &waypoint)
 {
 
-
     // position每维度数据用一行，一般二维xy或者三维xyz
     DVec<double> times = DVec<double>::Zero(waypoint.cols() - 1);
     const double t = max_vel_ / max_accel_;
@@ -54,11 +53,11 @@ DVec<double> MinimumSnap::AllocateTime(const DMat<double> &waypoint)
 
         times[i - 1] = segment_t;
     }
-    cout << "time:    " << times.size() << endl;
-
     // 临时测试
-    times(0) = 0.5;
-    times(1) = 0.5;
+    times(0) = 0.2;
+    times(1) = 0.3;
+    times(2) = 0.5;
+
 
     return times;
 }
@@ -94,11 +93,9 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
 {
     //每段时间，使用绝对时间，下面先求出每段的相对时间，然后转化为绝对时间
     DVec<double> relative_segment_Time = AllocateTime(path);
-    cout << "7-000000" << endl;
     // k段轨迹，有k个时间段，k+1个时间点 t0 = 0.0
     segment_time.resize(relative_segment_Time.size() + 1, 1);
     segment_time.setZero();
-    cout << "7-000000" << endl;
 
     for (unsigned int i = 1; i <= relative_segment_Time.size(); i++)
     {
@@ -112,13 +109,10 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
         cout << segment_time[i] << endl;
 
 
-
-
     /* 构建等式约束 */
     /* step1:构建第一组约束：起点终点PVA */
     DMat<double> Sub_A_start;
     Sub_A_start.resize(3, n + 1);
-
     Sub_A_start.setZero();
 
     DMat<double> Sub_A_end;
@@ -167,15 +161,9 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
         qp_A.block(3 + i * 4 + 3, (i + 1) * (n + 1), 1, n + 1) = -Sub_Ab.block(0, 0, 1, n + 1);
     }
 
-    cout << "------------------------============" << endl
-         << qp_A << endl;
-
-
     // 构建约束的上下界，本算法中，约束为等式约束，故上下界相等
-    // todolist 这个地方有错误 已修改！！！！！！！！！！！！！
     qp_L.block(0, 0, 3, 1) = start_end_State.block(dimension_index, 0, 1, 3).transpose();
     qp_L.block(3 + 4 * (k - 1), 0, 3, 1) = start_end_State.block(dimension_index, 3, 1, 3).transpose();
-
 
     for (unsigned int i = 0; i < k - 1; i++)
     {
@@ -217,7 +205,6 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
         Q.block(row, row, n + 1, n + 1) = Sub_Q;
     }
     qp_H = Q;
-    cout << Q << endl;
 }
 
 // 轨迹求解时，一维一维地求解，最后合成两维或者三维的轨迹
@@ -243,10 +230,7 @@ void MinimumSnap::SolveQp(const DMat<double> &waypoint, const DMat<double> _star
         ResizeQpMats();
         start_end_State = _start_end_State;
 
-        // AllocateTime(waypoint);
-
         SetParas(start_end_State, i);
-
 
         decision_variables = qpSolver->Solve(qp_H, qp_G, qp_A, qp_L, qp_U);
         cout << "decision " << endl
@@ -259,23 +243,16 @@ void MinimumSnap::SolveQp(const DMat<double> &waypoint, const DMat<double> _star
 void MinimumSnap::PublishTrajectory()
 {
 
-    // DVec<double> temp_position;
-    // temp_position.resize(path.cols(),1);
-    // temp_position.setZero();
     Vec3<double> temp_position;
-    // temp_position.resize(path.cols(),1);
     temp_position.setZero();
 
     for (unsigned int i = 0; i < segment_time.size() - 1; ++i)
     {
-        cout <<"000000==============="<<i<<endl;
         for (double t = segment_time[i]; t < segment_time[i + 1];)
         {
             cout<<t<<" ";
-
             temp_position = GetPosPolynomial(coeff_All, i, t);
             pos_List.push_back(temp_position);
-
 
             temp_position = GetVelPolynomial(coeff_All, i, t);
             vel_List.push_back(temp_position);
@@ -323,12 +300,7 @@ Vec3<double> MinimumSnap::GetPosPolynomial(const DMat<double> &poly_coeff_mat, u
         }
 
         double temp_position = 0.0;
-        // for (unsigned int i = 0u; i < time.rows(); ++i)
-        // {
-        //     temp_position = temp_position + coeff(i) * time(i);
-        // }
         temp_position = coeff.transpose() * time;
-
         position(dim) = temp_position;
     }
 
@@ -358,11 +330,7 @@ Vec3<double> MinimumSnap::GetVelPolynomial(const DMat<double> &poly_coeff_mat, u
         }
 
         double temp_vel = 0.0;
-        // for (unsigned int i = 0u; i < time.rows(); ++i) {
-        //     temp_vel = temp_vel + coeff(i) * time(time.rows() - i - 1u);
-        // }
         temp_vel = coeff.transpose() * time;
-
         vel(dim) = temp_vel;
     }
 
@@ -393,11 +361,7 @@ Vec3<double> MinimumSnap::GetAccPolynomial(const DMat<double> &poly_coeff_mat, u
         }
 
         double temp_acc = 0.0;
-        // for (unsigned int i = 0u; i < time.rows(); ++i) {
-        //     temp_acc = temp_acc + coeff(i) * time(time.rows() - i - 1u);
-        // }
         temp_acc = coeff.transpose() * time;
-
         acc(dim) = temp_acc;
     }
 

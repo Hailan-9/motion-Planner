@@ -1,4 +1,3 @@
-/* */
 
 #include <iostream>
 #include "minimumsnap.hpp"
@@ -25,7 +24,7 @@ long long plan_total_time;
 int main()
 {
 
-	// // 创建输出文件
+	// 创建输出文件
 	time_t currentTime;
 	time(&currentTime);
 	currentTime = currentTime + 8 * 3600; //	格林尼治标准时间+8个小时
@@ -39,7 +38,7 @@ int main()
     gettimeofday(&startT, NULL);
     MinimumSnap *minimumSnap_Test = new MinimumSnap();
     //每维数据用一行
-    Mat3<double> wayPoint;
+    DMat<double> wayPoint(3,4);
     DMat<double> _start_end_State(3,6);
     _start_end_State<<10.0, 0.0, 0.0, 30.0, 0.0, 0.0,
                       0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -51,15 +50,19 @@ int main()
 
 
 
-    wayPoint<<  10.0, 20.0, 30.0,
-                0.0, 0.0, 0.0,
-                0.0, 0.4, 0.0;
+    wayPoint<<  10.0, 20.0,  25.0,  30.0,
+                0.0,  5.0,   10,    0.0,
+                0.0,  0.4,   0.4,   0.0;
     double total_Time = 1.0;
     
     minimumSnap_Test->SolveQp(wayPoint, _start_end_State, 3, 1.0, 10, 5);
 
     //轨迹输出到文件
     minimumSnap_Test->PublishTrajectory();
+
+    gettimeofday(&endT, NULL);
+    plan_total_time = (endT.tv_sec - startT.tv_sec)*1000000 + (endT.tv_usec - startT.tv_usec);
+    cout<<"plan_Total_Time: "<<plan_total_time/1000.0<<endl;
 
     for(int i = 0; i < minimumSnap_Test->pos_List.size();i++)
     {
@@ -74,9 +77,7 @@ int main()
     }
 
 
-    gettimeofday(&endT, NULL);
-    plan_total_time = (endT.tv_sec - startT.tv_sec)*1000000 + (endT.tv_usec - startT.tv_usec);
-    cout<<"plan_Total_Time: "<<plan_total_time/1000.0<<endl;
+
 
     return 0;
 

@@ -10,6 +10,7 @@
 • Minimum jerk：最小化角速度，有利于视觉跟踪
 • Minimum snap：最小化差速推力，节省能源
 */
+
 #pragma once
 
 #include <iostream>
@@ -31,7 +32,7 @@ class MinimumSnap
         //设轨迹分为k段，则共有k+1个点
         //如果只考虑起点终点PVA，中间点P，中间点PVA连续，则共有4k+2个等式约束
 
-        //TOdolist 可以考虑约束住中间每个插值点的速度和位置，使其在安全范围内
+        //！！！TOdolist 可以考虑约束住中间每个插值点的速度和位置，使其在安全范围内,可能需要贝塞尔曲线
         int k;
         //多项式次数
         int n;
@@ -42,7 +43,7 @@ class MinimumSnap
         double max_accel_;
         //轨迹或者路径的维数 xy或者xyz
         int path_dimension;
-        //每段轨迹的时间 绝对时间 k段轨迹 k+1个时间点
+        //每段轨迹的时间 绝对时间 k段轨迹 k+1个时间点t0~tk
         DVec<double> segment_time;
         //start_end_State---每一行代表一维 首先是x维度起点p-v-a值，然后是终点p-v-a值，第二行 第三行同理
         DMat<double> start_end_State;
@@ -81,7 +82,6 @@ class MinimumSnap
         Vec3<double> GetPosPolynomial(const DMat<double> &poly_coeff_mat, unsigned int k, double t); 
         Vec3<double> GetVelPolynomial(const DMat<double> &poly_coeff_mat, unsigned int k, double t); 
         Vec3<double> GetAccPolynomial(const DMat<double> &poly_coeff_mat, unsigned int k, double t); 
-
 
 
         /** @brief QpSolver类的实例化对象，二次规划求解器 */
