@@ -30,7 +30,7 @@ int main()
 	time(&currentTime);
 	currentTime = currentTime + 8 * 3600; //	格林尼治标准时间+8个小时
 	tm *t = gmtime(&currentTime);	
-	string filename = "/home/zs/vscodeC++wenjian/2023motion_planning/demo/record/data" + to_string(t->tm_mon + 1) + "-" +to_string(t->tm_mday) + "-" + to_string(t->tm_hour) + "-" + to_string(t->tm_min) + ".txt";
+	string filename = "/home/zs/2023motion_planning/demo/record/data" + to_string(t->tm_mon + 1) + "-" +to_string(t->tm_mday) + "-" + to_string(t->tm_hour) + "-" + to_string(t->tm_min) + ".txt";
 	outfile.open(filename.c_str());
 
 
@@ -57,11 +57,9 @@ int main()
     double total_Time = 1.0;
     
     minimumSnap_Test->SolveQp(wayPoint, _start_end_State, 3, 1.0, 10, 5);
-    cout<<"222-000000"<<endl;
 
     //轨迹输出到文件
     minimumSnap_Test->PublishTrajectory();
-    cout<<"2333-000000"<<endl;
 
     for(int i = 0; i < minimumSnap_Test->pos_List.size();i++)
     {
@@ -78,7 +76,7 @@ int main()
 
     gettimeofday(&endT, NULL);
     plan_total_time = (endT.tv_sec - startT.tv_sec)*1000000 + (endT.tv_usec - startT.tv_usec);
-    cout<<"plan_Total_Time: "<<plan_total_time<<endl;
+    cout<<"plan_Total_Time: "<<plan_total_time/1000.0<<endl;
 
     return 0;
 
