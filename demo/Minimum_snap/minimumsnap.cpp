@@ -125,6 +125,9 @@ void MinimumSnap::ResizeQpMats()
     start_end_State.resize(path_dimension, 2*order);
     start_end_State.setZero();
 
+    relative_segment_Time.resize(k);
+    relative_segment_Time.setZero();
+
     pos_List.clear();
     vel_List.clear();
     acc_List.clear();
@@ -132,26 +135,11 @@ void MinimumSnap::ResizeQpMats()
 
 void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimension_index)
 {
-    //每段时间，使用绝对时间，下面先求出每段的相对时间，然后转化为绝对时间
-    DVec<double> relative_segment_Time = AllocateTime(path);
-    // k段轨迹，有k个时间段，k+1个时间点 t0 = 0.0
-    segment_time.resize(relative_segment_Time.size() + 1, 1);
-    segment_time.setZero();
-
-    for (unsigned int i = 1; i <= relative_segment_Time.size(); i++)
-    {
-        for (unsigned int j = 0; j < i; j++)
-        {
-            segment_time[i] += relative_segment_Time[j];
-        }
-    }
-    cout << "segment_time--------------" << endl;
-    for (int i(0); i < segment_time.size(); i++)
-        cout << segment_time[i] << endl;
-
+    /** 使用相对时间 */
+    relative_segment_Time = AllocateTime(path);
 
     /* 构建等式约束 */
-    /* step1:构建第一组约束：起点终点PVA */
+    /* step1:构建第一组约束：起点终点PVAJ等 */
     DMat<double> Sub_A_start;
     Sub_A_start.resize(order, n + 1);
     Sub_A_start.setZero();
@@ -164,16 +152,17 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
     {
         for (unsigned int j = i; j < n + 1; j++)
         {
-            Sub_A_start.block(i, j, 1, 1) << pow(segment_time[0], j - i) * Factorial(j) / Factorial(j - i);
+            Sub_A_start.block(i, j, 1, 1) << pow(0.0, j - i) * Factorial(j) / Factorial(j - i);
         }
     }
     cout << "sub-----------" << endl;
     cout << Sub_A_start << endl;
+
     for (unsigned int i = 0; i < order; i++)
     {
         for (unsigned int j = i; j < n + 1; j++)
         {
-            Sub_A_end.block(i, j, 1, 1) << pow(segment_time[k], j - i) * Factorial(j) / Factorial(j - i);
+            Sub_A_end.block(i, j, 1, 1) << pow(relative_segment_Time[k-1], j - i) * Factorial(j) / Factorial(j - i);
         }
     }
     cout << "sub-----------" << endl;
@@ -193,8 +182,11 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
         {
             for (unsigned int j = l; j < n + 1; j++)
             {
-                Sub_Aa(l, j) = pow(segment_time[i + 1], j - l) * Factorial(j) / Factorial(j - l);
-                Sub_Ab(l, j) = -Sub_Aa(l, j);
+                Sub_Aa(l, j) = pow(relative_segment_Time[i], j - l) * Factorial(j) / Factorial(j - l);
+            }
+            for (unsigned int j = l; j < n + 1; j++)
+            {
+                Sub_Ab(l, j) = -pow(0.0, j - l) * Factorial(j) / Factorial(j - l);
             }
         }
         qp_A.block(order + i * (order+1), i * (n + 1), order, n + 1) = Sub_Aa;
@@ -223,7 +215,7 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
     // 构建Q矩阵 多项式系数按照p0……pn顺序
     DMat<double> Q = DMat<double>::Zero(k * (n + 1), k * (n + 1));
     cout << "k_num " << k << endl;
-    for (unsigned int i = 1; i < k + 1; i++)
+    for (unsigned int i = 0; i < k; i++)
     {
         DMat<double> Sub_Q(n + 1, n + 1);
         Sub_Q.setZero();
@@ -238,11 +230,14 @@ void MinimumSnap::SetParas(const DMat<double> &start_end_State, const int &dimen
                 }
                 Sub_Q(r, c) = ( (Factorial(c) * Factorial(r) ) /
                               (Factorial(r - order) * Factorial(c - order)) ) *
-                              (pow(segment_time[i], r + c - 2 * order + 1) - pow(segment_time[i - 1], r + c - 2 * order + 1)) /
+                              (pow(relative_segment_Time[i], r + c - 2 * order + 1)) /
                               (double)(r - order + c - order + 1);
             }
         }
-        unsigned int row = (i - 1) * (n + 1);
+        /** 转化为贝塞尔曲线 */
+        // Sub_Q = bezier2polynomial_Matrix(n).transpose()*Sub_Q*bezier2polynomial_Matrix(n);
+
+        unsigned int row = (i) * (n + 1);
         Q.block(row, row, n + 1, n + 1) = Sub_Q;
     }
     qp_H = Q;
@@ -289,13 +284,11 @@ void MinimumSnap::PublishTrajectory()
     temp_position.setZero();
     cout<<"dddddddddd "<<dt<<endl;
 
-    for (unsigned int i = 0; i < segment_time.size() - 1; ++i)
+    for (unsigned int i = 0; i < relative_segment_Time.size(); ++i)
     {
-    cout<<"dddddddddd "<<segment_time[i]<<endl;
-    cout<<"dddddddddd "<<segment_time[i+1]<<endl;
+    cout<<"dddddddddd "<<relative_segment_Time[i]<<endl;
 
-
-        for (double t = segment_time[i]; t < segment_time[i + 1];)
+        for (double t = 0.0; t < relative_segment_Time[i];)
         {
             cout<<t<<" ";
             temp_position = GetPosPolynomial(coeff_All, i, t);
@@ -310,15 +303,15 @@ void MinimumSnap::PublishTrajectory()
             t = (double)t;
         }
         // //将终点也存入容器中
-        // if(i == segment_time.size() - 2)
+        // if(i == relative_segment_Time.size() - 2)
         // {
-        //     temp_position = GetPosPolynomial(coeff_All, i, segment_time[i + 1]);
+        //     temp_position = GetPosPolynomial(coeff_All, i, relative_segment_Time[i + 1]);
         //     pos_List.push_back(temp_position);
 
-        //     temp_position = GetVelPolynomial(coeff_All, i, segment_time[i + 1]);
+        //     temp_position = GetVelPolynomial(coeff_All, i, relative_segment_Time[i + 1]);
         //     vel_List.push_back(temp_position);
 
-        //     temp_position = GetAccPolynomial(coeff_All, i, segment_time[i + 1]);
+        //     temp_position = GetAccPolynomial(coeff_All, i, relative_segment_Time[i + 1]);
         //     acc_List.push_back(temp_position);
         // }
     }

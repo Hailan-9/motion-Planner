@@ -47,6 +47,7 @@ class MinimumSnap
         int path_dimension;
         //每段轨迹的时间 绝对时间 k段轨迹 k+1个时间点t0~tk
         DVec<double> segment_time;
+        DVec<double> relative_segment_Time;
         //start_end_State---每一行代表一维 首先是x维度起点p-v-a值，然后是终点p-v-a值，第二行 第三行同理
         DMat<double> start_end_State;
         void SetParas(const DMat<double> &start_end_State,const int &dimension_index);
