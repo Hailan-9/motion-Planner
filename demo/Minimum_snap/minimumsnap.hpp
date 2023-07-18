@@ -38,6 +38,8 @@ class MinimumSnap
         int n;
         //选择最小化的阶次 2:acc 3:jerk 4:snap 
         int order;
+        //插值点时间间隔
+        double dt;
         //最大速度和最大加速度都是合速度和合加速度
         double max_vel_;
         double max_accel_;

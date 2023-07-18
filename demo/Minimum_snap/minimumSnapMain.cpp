@@ -37,12 +37,16 @@ int main()
 
     gettimeofday(&startT, NULL);
     MinimumSnap *minimumSnap_Test = new MinimumSnap();
+    const int order = 3;
     //每维数据用一行
     DMat<double> wayPoint(3,4);
-    DMat<double> _start_end_State(3,6);
-    _start_end_State<<10.0, 0.0, 0.0, 30.0, 0.0, 0.0,
-                      0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                      0.0, 0.0, 0.0, 0.0, 0.0, 0.0;
+    DMat<double> _start_end_State(3,2*order);
+    // _start_end_State<<10.0, 0.0, 0.0,0.0,  30.0, 0.0, 0.0, 0.0,
+    //                   0.0, 0.0, 0.0, 0.0,  0.0, 0.0, 0.0,0.0,
+    //                   0.0, 0.0, 0.0, 0.0,  0.0, 0.0, 0.0,0.0;
+    _start_end_State<<10.0, 0.0, 0.0,  30.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,   0.0, 0.0, 0.0,
+                      0.0, 0.0, 0.0,   0.0, 0.0, 0.0;
     
     cout<<"++++++"<<endl;
     cout<<_start_end_State<<endl;
@@ -55,7 +59,7 @@ int main()
                 0.0,  0.4,   0.4,   0.0;
     double total_Time = 1.0;
     
-    minimumSnap_Test->SolveQp(wayPoint, _start_end_State, 3, 1.0, 10, 5);
+    minimumSnap_Test->SolveQp(wayPoint, _start_end_State, order, 1.0, 10, 5);
 
     //轨迹输出到文件
     minimumSnap_Test->PublishTrajectory();

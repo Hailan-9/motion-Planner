@@ -12,4 +12,8 @@ inline double Factorial(unsigned int x)
     return static_cast<double>(fac);
 }
 
+
+// polynomial_roots_finding()
+
+
 #endif //TRAJECTORY_GENERATOR_MATH_FUNCTION_H
