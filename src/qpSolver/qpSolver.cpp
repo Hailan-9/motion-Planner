@@ -279,7 +279,7 @@ DVec<double> QpSolver::Solve(DMat<double> H_matrix, DVec<double> G_vector,
         settings->polish = true;
         settings->scaled_termination = true;
         settings->verbose = false;
-        settings->max_iter = 200000;
+        settings->max_iter = 20000;
         settings->eps_abs = 0.000001;
         settings->eps_rel = 0.000001;
     }
@@ -301,10 +301,9 @@ DVec<double> QpSolver::Solve(DMat<double> H_matrix, DVec<double> G_vector,
         return_data(i) = work->solution->x[i];
         
     }
-    // pthread_mutex_lock(&outfile_mutex);
 
-    //  outfile <<"iternum "<<work->info->iter<<" "<<work->info->solve_time<<std::endl;
-    // pthread_mutex_unlock(&outfile_mutex);
+    cout <<"iternum "<<work->info->iter<<" time: "<<work->info->solve_time*1000.0<<std::endl;
+
 
     Free();
     // Cleanup

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
-set(PROJ_NAME_MinimumSnap MinimumSnap)
+set(PROJ_NAME_MinimumSnap Minimum_snap)
 # project(${PROJ_NAME_MinimumSnap})
 
 # # 加入一个配置头文件，用于处理 CMake 对源码的设置
@@ -13,13 +13,14 @@ set(PROJ_NAME_MinimumSnap MinimumSnap)
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O3")
 # # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
-# # 是否使用实际机器人
-# option (ROBOT "Use Real Robot" ON)
+
 
 
 # 打印消息
 MESSAGE(STATUS "###################################")
 MESSAGE(STATUS "Project = ${PROJ_NAME_MinimumSnap}")
+MESSAGE(STATUS "CMAKE_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
+
 
 # 包含所有.cpp 和.hpp
 FILE(GLOB HEADER_LIST "${CMAKE_SOURCE_DIR}/src/Minimum_snap/*.hpp" 
@@ -42,6 +43,7 @@ FILE(GLOB SOURCE_LIST "${CMAKE_SOURCE_DIR}/Minimum_snap/*.cpp"
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 add_executable(${PROJ_NAME_MinimumSnap} ${SOURCE_LIST} ${HEADER_LIST})
 
+#向工程添加多个特定的头文件---搜索路径
 include_directories(${CMAKE_SOURCE_DIR}/src/Minimum_snap
                     ${CMAKE_SOURCE_DIR}/src
                     ${CMAKE_SOURCE_DIR}/src/qpSolver
@@ -50,27 +52,18 @@ include_directories(${CMAKE_SOURCE_DIR}/src/Minimum_snap
 
 
 
-
-
-
-
-
 set(IPOPT_LIBRARY_DIRS /usr/local/lib)
 set(OSQP_LIBRARY_DIRS /usr/local/lib)
-# # set(LIBUSB_LIBRARY_DIRS /usr/local/lib)
-# # set(RBDL_LIBRARY_DIRS /usr/local/lib)  
 
 set(IPOPT_INCLUDE_DIRS /usr/local/include/coin)
 set(EIGEN_INCLUDE_DIRS /usr/include/eigen3)
 set(OSQP_INCLUDE_DIRS /usr/local/include/osqp)
-# # set(LIBUSB_INCLUDE_DIRS /usr/local/include/libusb-1.0)
-# # set(RBDL_INCLUDE_DIRS /usr/local/include/rbdl)
 
+#向工程添加多个特定的头文件搜索路径
 include_directories(${EIGEN_INCLUDE_DIRS}) 
 include_directories(${IPOPT_INCLUDE_DIRS})
 include_directories(${OSQP_INCLUDE_DIRS})
-# # include_directories(${LIBUSB_INCLUDE_DIRS})
-# # include_directories(${RBDL_INCLUDE_DIRS} )
+
 
 link_directories(${OSQP_LIBRARY_DIRS})
 target_link_libraries(${PROJ_NAME_MinimumSnap} osqp)
@@ -118,7 +111,6 @@ target_link_libraries(${PROJ_NAME_MinimumSnap} ipopt)
 
 
 
-# #zhangshuai 2023.06.20
 
 
 # cmake_minimum_required(VERSION 3.4.1)

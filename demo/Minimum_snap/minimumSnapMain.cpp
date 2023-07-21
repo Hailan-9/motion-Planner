@@ -54,9 +54,9 @@ int main()
 
 
 
-    wayPoint<<  10.0, 20.0,  25.0,  30.0,
-                0.0,  5.0,   10,    0.0,
-                0.0,  0.4,   0.4,   0.0;
+    wayPoint<<  10.0, 20,  25.0,  30.0,
+                0.0,  2,   5,    0.0,
+                0.0,  0.2,   0.4,   0.0;
     double total_Time = 1.0;
     
     minimumSnap_Test->SolveQp(wayPoint, _start_end_State, order, 1.0, 10, 5);

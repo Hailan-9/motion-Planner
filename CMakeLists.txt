@@ -10,15 +10,15 @@ project(${PROJ_NAME})
 #   )
 
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -O3")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O3")
+# set(CMAKE_CXX_STANDARD 11)
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -O3")
+# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O3")
 
-#设置动态库文件的输出目录
-SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
-#设置静态库文件的输出目录
-SET(CMAKE_LINRARY_OUTPUT_DIRECTROY "${PROJECT_SOURCE_DIR}/lib")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+# #设置动态库文件的输出目录
+# SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
+# #设置静态库文件的输出目录
+# SET(CMAKE_LINRARY_OUTPUT_DIRECTROY "${PROJECT_SOURCE_DIR}/lib")
+# # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 
 
@@ -31,7 +31,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 # 添加第一个子目录
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/Astar)
 # 添加第二个子目录
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/Minimum_snap)
+# add_subdirectory(${CMAKE_SOURCE_DIR}/src/Minimum_snap)
 
 
 
@@ -39,20 +39,15 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/Minimum_snap)
 
 
 
-set(IPOPT_LIBRARY_DIRS /usr/local/lib)
-set(OSQP_LIBRARY_DIRS /usr/local/lib)
+# set(IPOPT_INCLUDE_DIRS /usr/local/include/coin)
+# set(EIGEN_INCLUDE_DIRS /usr/include/eigen3)
+# set(OSQP_INCLUDE_DIRS /usr/local/include/osqp)
 
 
-set(IPOPT_INCLUDE_DIRS /usr/local/include/coin)
-set(EIGEN_INCLUDE_DIRS /usr/include/eigen3)
-set(OSQP_INCLUDE_DIRS /usr/local/include/osqp)
+# include_directories(${EIGEN_INCLUDE_DIRS}) 
+# include_directories(${IPOPT_INCLUDE_DIRS})
+# include_directories(${OSQP_INCLUDE_DIRS})
 
-
-include_directories(${EIGEN_INCLUDE_DIRS}) 
-include_directories(${IPOPT_INCLUDE_DIRS})
-include_directories(${OSQP_INCLUDE_DIRS})
-# include_directories(${LIBUSB_INCLUDE_DIRS})
-# include_directories(${RBDL_INCLUDE_DIRS} )
 
 # link_directories(${OSQP_LIBRARY_DIRS})
 # # target_link_libraries(${PROJ_NAME} osqp)

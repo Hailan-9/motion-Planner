@@ -18,6 +18,7 @@
 #include <math.h>
 #include "math_function.hpp"
 #include "qpSolver.hpp"
+#include "commonFunction.hpp"
 using namespace std;
 using namespace Eigen;
 
@@ -74,6 +75,11 @@ class MinimumSnap
         DVec<double> decision_variables;
         //每一行代表一个维度的所有段的多项式系数
         DMat<double> coeff_All;
+        // 时间归一化矩阵，贝塞尔曲线和普通多项式曲线转换时使用
+        DMat<double> time_normalization_Matrix;
+        // 轨迹规划中的全局---速度、加速度上下限 一行代表一维数据
+        DMat<double> dynamic_Constraints;
+
 
         // DMat<double> pos_List;
         // DMat<double> vel_List;

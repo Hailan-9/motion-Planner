@@ -113,7 +113,7 @@
     ],
 
     "doxdocgen.file.copyrightTag": [                                // file注释
-        "@copyright Copyright (c) {year}.."
+        "@copyright Copyright (c) {year}-hailan"
     ],
     "doxdocgen.generic.authorEmail":    "https://github.com/Hailan-9",         // {email}  样式
     "doxdocgen.generic.authorName":     "hailan",                // {author} 样式

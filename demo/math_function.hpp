@@ -19,7 +19,14 @@ inline double Factorial(unsigned int x)
 
     return static_cast<double>(fac);
 }
-
+/**
+ * @brief   描述
+ * 
+ * @param   order       参数描述
+ * @return  DMat<double> 
+ * @author  hailan(https://github.com/Hailan-9)
+ * @date    2023-07-19
+ */
 inline DMat<double> bezier2polynomial_Matrix(const unsigned int &order)
 {
     int num;
@@ -51,6 +58,26 @@ inline DMat<double> bezier2polynomial_Matrix(const unsigned int &order)
         -1.0, 7.0, -21.0, 35.0, -35.0, 21.0, -7.0, 1.0;
     }
     return matrix;
+}
+inline Vec2<double> low_high_Bound(const double &param1,const double &param2)
+{
+    Vec2<double> bound_Vector = Vec2<double>::Zero();
+    if(param1<param2)
+    {
+        bound_Vector(0) = param1;
+        bound_Vector(1) = param2;
+    }
+    else if(param1>param2)
+    {
+        bound_Vector(0) = param2;
+        bound_Vector(1) = param1;
+    }
+    else
+    {
+        bound_Vector(0) = param2;
+        bound_Vector(1) = param1;
+    }
+    return bound_Vector;
 }
 
 

@@ -1,5 +1,3 @@
-#zhangshuai 2023.06.20
-
 
 cmake_minimum_required(VERSION 3.4.1)
 set(PROJ_NAME_Astar Astar)
@@ -15,9 +13,6 @@ set(PROJ_NAME_Astar Astar)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -O3")
 # set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -O3")
 # # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
-
-# # 是否使用实际机器人
-# option (ROBOT "Use Real Robot" ON)
 
 
 # 打印消息

@@ -1,9 +1,9 @@
 /**
- * @copyright Copyright (c) 2023..
+ * @copyright Copyright (c) 2023-hailan
  * 
  * @file    hybrid_A*.hpp
- * @brief   移动机器人运动规划---路径搜索之混合A*算法，相比普通的A*算法，考虑了机器人的动力学约束
- * @author  hailan(2522082924@qq.com)
+ * @brief   描述
+ * @author  hailan(https://github.com/Hailan-9)
  * @version 0.1
  * @date    2023-07-16
  */
