@@ -21,7 +21,7 @@ struct Point
     float y;
     float F, G, H;
     Point *parent;
-    //构造函数
+    //构造函数  参数初始化列表---
     Point(float _x, float _y) : x(_x), y(_y), F(0), G(0), H(0),\
     parent(NULL)
     {

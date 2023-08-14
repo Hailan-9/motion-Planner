@@ -1,4 +1,4 @@
-/* 2023.06.20 */
+
 
 #include <iostream>
 #include <list>

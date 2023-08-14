@@ -12,7 +12,7 @@
 
 
 using namespace std;
-/* 文本输出 */
+/* 文本输出 22*/
 std::ofstream outfile;
 
 

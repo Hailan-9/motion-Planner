@@ -29,7 +29,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 #用于向当前工程添加存放原文件的子目录
 # 添加第一个子目录
-# add_subdirectory(${CMAKE_SOURCE_DIR}/src/Astar)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/Astar)
 # 添加第二个子目录
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/Minimum_snap)
 
